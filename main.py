@@ -24,7 +24,7 @@ def on_connect(client, userdata, flags, rc):
         logging.error('Connection to MQTT broker failed')
 
 def on_message(client, userdata, message):
-    logging.debug('In function')
+    logging.debug('Received a message')
     global state
     if message.payload == b'not_home':
         logging.debug('Message received: presence = False (not_home)')
@@ -34,12 +34,13 @@ def on_message(client, userdata, message):
         presence = True
 
 def bluetooth_ping():
-    logging.debug('In function')
+    logging.debug('Starting bluetooth l2ping')
     global presence
     for device, mac_address in config.presence_list.items():
         logging.debug('Starting l2ping for device: {}, MAC: {}'.format(device, mac_address))
         result = subprocess.call(['l2ping', '-c1', '-s32', '-t1', mac_address])
         if result == 0:
+            logging.debug('Device: {}, MAC: {} is responding'.format(device, mac_address))
             client.publish(config.mqtt_topic_prefix + '/' + device, 'home')
             presence = True
 
@@ -61,7 +62,7 @@ if __name__ == '__main__':
             while True:
                 logging.debug('Sleep 5 seconds')
                 time.sleep(5)
-                if not presence:
+                if presence == False:
                     logging.debug('Presence is False calling bluetooth_ping()')
                     bluetooth_ping()
         except KeyboardInterrupt:
