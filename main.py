@@ -59,11 +59,12 @@ if __name__ == '__main__':
         client.subscribe(config.mqtt_topic_prefix + '/' + config.mqtt_listening_topic)
         try:
             while True:
+                logging.debug('Sleep 5 seconds')
                 time.sleep(5)
-                if presence = False:
-                    print("[+] State is not_home (1), start bl_ping")
-                    bluetooth_ping
+                if not presence:
+                    logging.debug('Presence is False calling bluetooth_ping()')
+                    bluetooth_ping()
         except KeyboardInterrupt:
-            print ("exiting")
+            logging.info('PyPresence exiting')
             client.disconnect()
             client.loop_stop()
