@@ -38,9 +38,7 @@ def bluetooth_ping():
     global presence
     for device, mac_address in config.presence_list.items():
         logging.debug('Starting l2ping for device: {}, MAC: {}'.format(device, mac_address))
-        l2ping_out = ''
-        l2ping_err = ''
-        result = subprocess.call(['l2ping', '-c1', '-s32', '-t1', mac_address], stdout=l2ping_out, stderr=l2ping_err)
+        result = subprocess.call(['l2ping', '-c1', '-s32', '-t1', mac_address], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if result == 0:
             logging.debug('Device: {}, MAC: {} is responding'.format(device, mac_address))
             client.publish(config.mqtt_topic_prefix + '/' + device, 'home')
