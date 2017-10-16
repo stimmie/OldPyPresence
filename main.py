@@ -18,6 +18,8 @@ def on_connect(client, userdata, flags, rc):
     logging.debug('Entered the function on_connect')
     if rc == 0:
         logging.info('Connected to MQTT broker')
+        logging.debug('Subscribing to MQTT topic: {}/{}'.format(config.mqtt_topic_prefix, config.mqtt_listening_topic))
+        client.subscribe(config.mqtt_topic_prefix + '/' + config.mqtt_listening_topic)
         global connected
         connected = True
     else:
@@ -64,8 +66,6 @@ def connect_to_broker():
     client.connect(config.broker_ip, port=config.broker_port)
     logging.debug('Starting MQTT client loop')
     client.loop_start()
-    logging.debug('Subscribing to MQTT topic: {}/{}'.format(config.mqtt_topic_prefix, config.mqtt_listening_topic))
-    client.subscribe(config.mqtt_topic_prefix + '/' + config.mqtt_listening_topic)
 
 if __name__ == '__main__':
     logging.info('PyPresence starting')
