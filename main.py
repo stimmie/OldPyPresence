@@ -54,6 +54,7 @@ def bluetooth_ping():
             presence = True
 
 def connect_to_broker():
+    global client
     client = mqttClient.Client(config.mqtt_client_name)
     client.username_pw_set(config.broker_username, password=config.broker_password)
     client.on_connect = on_connect
